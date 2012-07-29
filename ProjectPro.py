@@ -112,7 +112,7 @@ class ProjectProGUI:
 			
 			
     def saveNameChange(self, toRemove, toGrid):
-        ...
+        raise Exception('TODO: Implement saveNameChange')
 
 
 		
