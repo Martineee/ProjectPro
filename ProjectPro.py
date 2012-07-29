@@ -83,6 +83,8 @@ class ProjectProGUI:
         self.idearsRemoveButton = ttk.Button(self.idearsButtonPanel, text = "Slet valgte ideer")
         self.idearsRemoveButton.grid(column = 2, row = 0, sticky = "e")
 
+		
+		
     def showIdears(self, *projects, rowNum = 0): # Kommet til
         for row in projects:  # make append able to reuse this
             self.idearnames.append(StringVar())
@@ -107,9 +109,13 @@ class ProjectProGUI:
 
             rowNum += 1
 
+			
+			
     def saveNameChange(self, toRemove, toGrid):
         ...
-    
+
+
+		
     def editLabel(self, toRemove, toGrid):
         toRemove.configure(state = 'disabled')
         toRemove.grid_remove()
@@ -118,6 +124,8 @@ class ProjectProGUI:
         for idearName in self.idearnames:
             print(idearName.get())
 
+			
+			
     def prioriter(self, event = None, *, direction): # op
         for checkStatus in self.idearChecks:
             if checkStatus.get() == '1':
@@ -147,11 +155,14 @@ class ProjectProGUI:
         cur.execute("UPDATE Projects SET Priority = '%s' WHERE Name = '%s'" % (self.framesNContent['priority'][nr], self.idearnames[nr].get()))
         showProjectsTabel()
 
+		
+		
     def appendIdear(self, event = None):
         """Tilføjer ide til projektoversigt"""
         tWin = Toplevel(self.parent)
         nWindow = AppendIdearWindow(tWin)
         tWin.mainloop()
+
         
 
 class AppendIdearWindow:
@@ -201,15 +212,15 @@ class AppendIdearWindow:
         self.nHuskOpgEntry = ttk.Entry(self.rememberframe, width = 25, textvariable = self.nHuskOpg)
         self.nHuskOpgEntry.grid(column = 1, row = 0, columnspan = 5, pady = 2)
 
-        #--- Frist label
+        # Deadline label
         self.huskFristLabel = ttk.Label(self.rememberframe, text = "Frist: ")
         self.huskFristLabel.grid(column = 0, row = 1, sticky = "w", pady = 2)
 
-        #-- Frist frame
+        # Deadline frame
         self.fristFrame = ttk.Frame(self.rememberframe)
         self.fristFrame.grid(column = 1, row = 1, pady = 2, sticky = "w")
 
-        #-- Frist entry(s)
+        # Deadline entries
         self.nHuskFristDate, self.nHuskFristMonth, self.nHuskFristYear = StringVar(), StringVar(), StringVar()
         
         self.nHuskFristEntryD = ttk.Entry(self.fristFrame, width = 2, textvariable = self.nHuskFristDate)
@@ -227,16 +238,20 @@ class AppendIdearWindow:
         self.nHuskFristEntryY = ttk.Entry(self.fristFrame, width = 2, textvariable = self.nHuskFristDate)
         self.nHuskFristEntryY.grid(column = 4, row = 0)
 
-        #--- Frame til knap panel
+        # Button frame
         self.buttonPanel = ttk.Frame(self.mainframe)
         self.buttonPanel.grid(column = 0, row = 2, pady = 7)
 
-        #--- Ok samt annuller knap
+        # Add button
         self.append = ttk.Button(self.buttonPanel, text = "Tilføj", command = self.append)
         self.append.grid(column = 0, row = 0, padx = 7)
+		
+		# Cancel button
         self.cancel = ttk.Button(self.buttonPanel, text = "Annuler", command = self.close)
         self.cancel.grid(column = 1, row = 0, padx = 7)
 
+		
+		
     def append(self):
         cur.execute("SELECT Priority FROM Projects ORDER BY Priority ASC")
         rows = cur.fetchall()
@@ -271,6 +286,8 @@ class AppendIdearWindow:
                 
         self.close()
 
+		
+		
     def close(self):
         self.parent.destroy()
 
@@ -283,19 +300,21 @@ def createDatabase():
         cur.execute("CREATE TABLE Reminders(ID INTEGER PRIMARY KEY, ProjectID INT, Name VARCHAR, Deadline1 DATETIME NOT NULL, Deadline2 DATETIME NOT NULL)")
 
 
+		
 def showProjectsTabel():
     for row in getProjectsList():
         print(row)
     print("------------------------------\n")
 
 
+	
 def getProjectsList():
     cur.execute("SELECT * FROM Projects ORDER BY Priority ASC")
     return cur.fetchall()
     
 
 
-#--- Connect til database
+# Establish database connection
 con = sqlite3.connect('ProjectPro.db')
 
 with con:
